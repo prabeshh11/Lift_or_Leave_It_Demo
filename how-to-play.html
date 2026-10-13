@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lift or Leave It</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:        #2CB98A;
+      --teal-dim:    rgba(44,185,138,0.16);
+      --teal-border: rgba(44,185,138,0.30);
+      --card-bg:     #141614;
+      --row-bg:      #1C1E1C;
+      --row-alt:     #191B19;
+      --white:       #FFFFFF;
+      --grey:        #8A9A8A;
+      --amber:       #E09020;
+      --red:         #CC3333;
+      --font-title:  'Bebas Neue', sans-serif;
+      --font-ui:     'Rajdhani', sans-serif;
+      --font-body:   'Barlow', sans-serif;
+    }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      background: #080808;
+      font-family: var(--font-body);
+      color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* -- BACKGROUND --------------------------------- */
+    .bg {
+      position: fixed; inset: 0;
+      background: url('assets/warehouse-bg.jpg') center center / cover no-repeat;
+      filter: brightness(0.22) saturate(0.7);
+      z-index: 0;
+    }
+
+    /* -- MODAL CARD --------------------------------- */
+    .modal {
+      position: relative; z-index: 10;
+      width: min(520px, 96vw);
+      background: rgba(14,16,14,0.94);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 12px;
+      padding: 2.2rem 2.4rem 2rem;
+      margin: 2rem auto;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.75), 0 0 0 1px rgba(44,185,138,0.08);
+    }
+
+    /* -- CLOSE BUTTON --------------------------------- */
+    .close-btn {
+      position: absolute;
+      top: 1.1rem; right: 1.3rem;
+      background: none; border: none;
+      color: rgba(255,255,255,0.45);
+      font-size: 1.1rem; cursor: pointer;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .close-btn:hover { color: var(--white); }
+
+    /* -- HEADING --------------------------------- */
+    .modal-title {
+      font-family: var(--font-title);
+      font-size: 2.2rem;
+      letter-spacing: 0.22em;
+      text-align: center;
+      color: var(--white);
+      margin-bottom: 0.55rem;
+    }
+
+    .title-line {
+      display: block;
+      width: 40px; height: 2.5px;
+      background: var(--teal);
+      margin: 0 auto 1.8rem;
+      border-radius: 2px;
+    }
+
+    /* -- SECTIONS --------------------------------- */
+    .section {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 1.4rem;
+    }
+
+    .section-icon {
+      flex-shrink: 0;
+      width: 42px; height: 42px;
+      background: #1E221E;
+      border: 1px solid rgba(44,185,138,0.25);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+      color: var(--teal);
+    }
+
+    .section-body { flex: 1; }
+
+    .section-title {
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 0.22rem;
+    }
+
+    .section-desc {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--grey);
+      line-height: 1.5;
+    }
+
+    .key {
+      display: inline-block;
+      background: #2A2E2A;
+      border: 1px solid rgba(255,255,255,0.20);
+      border-radius: 4px;
+      padding: 0 0.32rem;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: #ccc;
+      margin: 0 1px;
+    }
+
+    /* -- SCORING TABLE --------------------------------- */
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-body);
+      font-size: 0.80rem;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .score-table thead tr th {
+      background: #1E221E;
+      padding: 0.5rem 0.8rem;
+      text-align: left;
+      font-family: var(--font-ui);
+      font-size: 0.70rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .score-table thead tr th:last-child { text-align: right; }
+
+    .score-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .score-table tbody tr:nth-child(odd)  { background: var(--row-bg); }
+    .score-table tbody tr:nth-child(even) { background: var(--row-alt); }
+
+    .score-table td {
+      padding: 0.45rem 0.8rem;
+      color: rgba(255,255,255,0.75);
+    }
+    .score-table td:last-child { text-align: right; font-weight: 600; }
+
+    .pts-best   { color: var(--teal); }
+    .pts-good   { color: var(--amber); }
+    .pts-wrong  { color: var(--red); }
+
+    /* section-divider rows inside tbody - two plain td cells, no colspan, no flex */
+    .tbl-section-head td {
+      background: #1E221E !important;
+      padding: 0.42rem 0.8rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      font-family: var(--font-ui);
+      font-size: 0.70rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.50);
+    }
+    .tbl-section-head td:first-child { text-align: left; }
+    .tbl-section-head td:last-child  { text-align: right; }
+
+    /* -- DIVIDER --------------------------------- */
+    .divider { border: none; border-top: 1px solid rgba(255,255,255,0.07); margin: 1.4rem 0 1.2rem; }
+
+    /* -- BUTTONS --------------------------------- */
+    .btn-row { display: flex; flex-direction: column; gap: 0.7rem; }
+
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 0.9rem 2rem;
+      border-radius: 6px;
+      font-family: var(--font-ui);
+      font-size: 1rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--teal); color: var(--white);
+      box-shadow: 0 0 24px rgba(44,185,138,0.30);
+    }
+    .btn-primary:hover {
+      background: #35D9A0;
+      box-shadow: 0 0 36px rgba(44,185,138,0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: transparent; color: rgba(255,255,255,0.45);
+      border: none; font-size: 0.82rem; letter-spacing: 0.16em;
+      padding: 0.5rem;
+    }
+    .btn-ghost:hover { color: var(--white); }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <div class="modal" role="dialog" aria-label="How to Play">
+    <button class="close-btn" onclick="window.location.href='index.html'" aria-label="Back to menu">✕</button>
+
+    <h1 class="modal-title">HOW TO PLAY</h1>
+    <span class="title-line"></span>
+
+    <!-- CONTROLS -->
+    <div class="section">
+      <div class="section-icon">⌨</div>
+      <div class="section-body">
+        <p class="section-title">Controls</p>
+        <p class="section-desc">
+          <span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span> to walk.
+          Move mouse to look around. <span class="key">SPACE</span> to jump.
+          <span class="key">E</span> to inspect a nearby package.
+          Click the game canvas to lock your mouse for movement.
+        </p>
+      </div>
+    </div>
+
+    <!-- INSPECT -->
+    <div class="section">
+      <div class="section-icon">📦</div>
+      <div class="section-body">
+        <p class="section-title">Inspect Packages</p>
+        <p class="section-desc">
+          Walk near a glowing package (yellow ring overhead). Press <span class="key">E</span> - the panel opens and your mouse is released so you can choose.
+        </p>
+      </div>
+    </div>
+
+    <!-- TECHNIQUE -->
+    <div class="section">
+      <div class="section-icon">🏋</div>
+      <div class="section-body">
+        <p class="section-title">Choose Your Technique</p>
+        <p class="section-desc">
+          Read the package details and choose: <strong>Solo Lift</strong>, <strong>Team Lift</strong>, or <strong>Use Trolley</strong>. Watch the technique animation, then move to the next package.
+        </p>
+      </div>
+    </div>
+
+    <!-- SCORING -->
+    <div class="section">
+      <div class="section-icon">🎯</div>
+      <div class="section-body">
+        <p class="section-title">Scoring</p>
+        <table class="score-table">
+          <thead>
+            <tr><th>Technique</th><th>Points</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Optimal Lift</td><td class="pts-best">+10</td></tr>
+            <tr><td>Sub-optimal Lift</td><td class="pts-good">+5</td></tr>
+            <tr><td>Dangerous Lift</td><td class="pts-wrong">0</td></tr>
+            <!-- section divider -->
+            <tr class="tbl-section-head">
+              <td>Time Bonus</td><td>Points</td>
+            </tr>
+            <tr><td>Fast (&gt;90 sec remaining)</td><td class="pts-best">+30</td></tr>
+            <tr><td>Average (30 - 90 sec remaining)</td><td class="pts-good">+20</td></tr>
+            <tr><td>Slow (1 - 29 sec remaining)</td><td class="pts-wrong">+10</td></tr>
+            <tr><td>Timed out (0 sec remaining)</td><td style="text-align:right;font-weight:600;color:#555">+0</td></tr>
+            <!-- section divider -->
+            <tr class="tbl-section-head">
+              <td>Bonus</td><td>Points</td>
+            </tr>
+            <tr><td>No injury risk choices</td><td class="pts-best">+20</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="btn-row">
+      <a href="index.html" class="btn btn-ghost">BACK</a>
+      <a href="#" id="start-btn" class="btn btn-primary">START GAME →</a>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/session.js"></script>
+  <script>
+    document.getElementById('start-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      try { initSession(); } catch(err) {}
+      window.location.href = 'game.html';
+    });
+  </script>
+</body>
+</html>

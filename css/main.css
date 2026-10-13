@@ -1,0 +1,138 @@
+/* Global design tokens and shared resets */
+
+/* DESIGN TOKENS */
+:root {
+  --navy:       #1B2E4B;
+  --teal:       #0F6E56;
+  --amber:      #BA7517;
+  --red:        #A32D2D;
+  --green:      #3B6D11;
+  --purple:     #3C3489;
+  --offwhite:   #F8F7F3;
+  --hud-glass:  rgba(0, 0, 0, 0.6);
+
+  /* Typography */
+  --font-main:  system-ui, -apple-system, sans-serif;
+  --font-mono:  'Courier New', Courier, monospace;
+}
+
+/*  RESET */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--navy);
+  background: var(--offwhite);
+}
+
+/* ACCESSIBILITY: Focus rings  */
+:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 2px;
+}
+
+/*  TYPOGRAPHY SCALE  */
+h1 { font-size: 2rem;   font-weight: 700; }
+h2 { font-size: 1.5rem; font-weight: 700; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+
+/*  BUTTON BASE  */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: var(--font-main);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+  border: 2px solid transparent;
+  text-decoration: none;
+  line-height: 1.2;
+}
+
+.btn:hover   { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.18); }
+.btn:active  { transform: translateY(0);    box-shadow: none; }
+
+.btn-primary {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+}
+.btn-primary:hover { background: #0d5d48; border-color: #0d5d48; }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--navy);
+  border-color: var(--navy);
+}
+.btn-secondary:hover { background: var(--navy); color: #fff; }
+
+.btn-secondary-light {
+  background: transparent;
+  color: #fff;
+  border-color: #fff;
+}
+.btn-secondary-light:hover { background: rgba(255,255,255,0.15); }
+
+/* PILL / BADGE  */
+.pill {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.pill-teal   { background: var(--teal);   color: #fff; }
+.pill-amber  { background: var(--amber);  color: #fff; }
+.pill-navy   { background: var(--navy);   color: #fff; }
+.pill-green  { background: var(--green);  color: #fff; }
+.pill-red    { background: var(--red);    color: #fff; }
+.pill-gray   { background: #888;          color: #fff; }
+
+/* OUTCOME BADGES  */
+.outcome-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.badge-best    { background: var(--green);  color: #fff; }
+.badge-good    { background: var(--amber);  color: #fff; }
+.badge-wrong   { background: var(--red);    color: #fff; }
+.badge-skipped { background: #888888;       color: #fff; }
+
+/*  UTILITY */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}

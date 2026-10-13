@@ -1,0 +1,203 @@
+
+/*  OVERLAY  */
+#anim-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.88);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+#anim-overlay.visible {
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Phase label (timer paused / watch the technique)  */
+#anim-phase-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #BA7517;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+  padding: 0.4rem 1.2rem;
+  background: rgba(186,117,23,0.15);
+  border-radius: 6px;
+  border: 1px solid rgba(186,117,23,0.3);
+}
+
+/*  Package name  */
+#anim-pkg-name {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  max-width: 340px;
+  margin: 0;
+}
+
+/*  Outcome result badge */
+#anim-result-badge {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: center;
+  padding: 0.55rem 1.8rem;
+  border-radius: 8px;
+  border: 2px solid currentColor;
+  margin: 0;
+}
+
+/* Stick figure wrapper */
+#stick-figure-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* BEST TECHNIQUE */
+@keyframes anim-best-wrapper {
+  0%    { transform: translateY(0px); }
+  25%   { transform: translateY(18px); }    
+  60%   { transform: translateY(-6px); }    
+  100%  { transform: translateY(0px); }
+}
+@keyframes anim-best-box {
+  0%    { transform: translateY(0); }
+  25%   { transform: translateY(8px); }
+  100%  { transform: translateY(-55px); }
+}
+@keyframes anim-best-legs {
+  0%    { transform: scaleY(1)    translateY(0);  transform-origin: top; }
+  25%   { transform: scaleY(0.68) translateY(0);  transform-origin: top; }
+  55%   { transform: scaleY(1)    translateY(0);  transform-origin: top; }
+  100%  { transform: scaleY(1)    translateY(0);  transform-origin: top; }
+}
+@keyframes anim-best-spine {
+  0%, 100% { fill: #1D9E75; opacity: 0.55; }
+  30%       { fill: #1D9E75; opacity: 1;   }
+  70%       { fill: #1D9E75; opacity: 0.9; }
+}
+
+.anim-best {
+  animation: anim-best-wrapper 4s ease-in-out forwards;
+}
+.anim-best #sf-leg-l,
+.anim-best #sf-leg-r {
+  animation: anim-best-legs 4s ease-in-out forwards;
+  transform-box: fill-box;
+}
+.anim-best #sf-box {
+  animation: anim-best-box 4s ease-in-out forwards;
+  transform-box: fill-box;
+}
+.anim-best #sf-spine {
+  animation: anim-best-spine 4s ease-in-out forwards;
+}
+
+/* GOOD TECHNIQUE */
+@keyframes anim-good-wrapper {
+  0%    { transform: translateY(0px); }
+  20%   { transform: translateY(12px); }
+  65%   { transform: translateY(-4px); }
+  100%  { transform: translateY(0px); }
+}
+@keyframes anim-good-arm-r {
+  0%    { transform: rotate(0deg);  transform-origin: 50px 35px; }
+  35%   { transform: rotate(25deg); transform-origin: 50px 35px; }
+  75%   { transform: rotate(14deg); transform-origin: 50px 35px; }
+  100%  { transform: rotate(0deg);  transform-origin: 50px 35px; }
+}
+@keyframes anim-good-box {
+  0%    { transform: translateY(0);     }
+  20%   { transform: translateY(6px);   }
+  100%  { transform: translateY(-42px); }
+}
+@keyframes anim-good-spine {
+  0%    { fill: #1D9E75; opacity: 0.55; }
+  40%   { fill: #BA7517; opacity: 1;    }
+  65%   { fill: #BA7517; opacity: 0.9;  }
+  100%  { fill: #1D9E75; opacity: 0.5;  }
+}
+
+.anim-good {
+  animation: anim-good-wrapper 4s ease-in-out forwards;
+}
+.anim-good #sf-arm-r {
+  animation: anim-good-arm-r 4s ease-in-out forwards;
+  transform-box: fill-box;
+}
+.anim-good #sf-box {
+  animation: anim-good-box 4s ease-in-out forwards;
+  transform-box: fill-box;
+}
+.anim-good #sf-spine {
+  animation: anim-good-spine 4s ease-in-out forwards;
+}
+
+/* WRONG TECHNIQUE */
+@keyframes anim-wrong-wrapper {
+  0%    { transform: translateY(0px); }
+  20%   { transform: translateY(10px); }
+  100%  { transform: translateY(0px); }
+}
+@keyframes anim-wrong-torso {
+  0%    { transform: rotate(0deg);  transform-origin: 50px 65px; }
+  25%   { transform: rotate(25deg); transform-origin: 50px 65px; }
+  55%   { transform: rotate(22deg); transform-origin: 50px 65px; }
+  100%  { transform: rotate(25deg); transform-origin: 50px 65px; }
+}
+@keyframes anim-wrong-box {
+  0%    { transform: translateY(0);    }
+  20%   { transform: translateY(4px);  }
+  100%  { transform: translateY(-28px);}
+}
+@keyframes anim-wrong-spine {
+  0%    { fill: #1D9E75; opacity: 0.55; }
+  18%   { fill: #A32D2D; opacity: 1;    }
+  36%   { fill: #A32D2D; opacity: 0.45; }
+  54%   { fill: #A32D2D; opacity: 1;    }
+  72%   { fill: #A32D2D; opacity: 0.45; }
+  90%   { fill: #A32D2D; opacity: 1;    }
+  100%  { fill: #A32D2D; opacity: 1;    }
+}
+
+.anim-wrong {
+  animation: anim-wrong-wrapper 4s ease-in-out forwards;
+}
+.anim-wrong #sf-torso {
+  animation: anim-wrong-torso 4s ease-in-out forwards;
+  transform-box: fill-box;
+}
+.anim-wrong #sf-box {
+  animation: anim-wrong-box 4s ease-in-out forwards;
+  transform-box: fill-box;
+}
+.anim-wrong #sf-spine {
+  animation: anim-wrong-spine 4s ease-in-out forwards;
+}
+
+/* POSTURE FIGURE in debrief */
+.posture-figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+.zone-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #A32D2D;
+  text-align: center;
+}

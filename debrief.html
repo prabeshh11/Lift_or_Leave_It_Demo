@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lift or Leave It</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:      #2CB98A;
+      --amber:     #E09020;
+      --red:       #CC3333;
+      --card-bg:   rgba(14,16,14,0.94);
+      --row-bg:    #1C1E1C;
+      --row-alt:   #191B19;
+      --white:     #FFFFFF;
+      --grey:      #8A9A8A;
+      --font-title:'Bebas Neue', sans-serif;
+      --font-ui:   'Rajdhani', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      background: #060806;
+      font-family: var(--font-body);
+      color: var(--white);
+    }
+
+    /* -- BACKGROUND ----------------------------------------------- */
+    .bg {
+      position: fixed; inset: 0;
+      background: url('assets/warehouse-bg.jpg') center center / cover no-repeat;
+      filter: brightness(0.15) saturate(0.5);
+      z-index: 0;
+    }
+
+    /* -- LAYOUT ----------------------------------------------- */
+    .page {
+      position: relative; z-index: 10;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 2rem 1.2rem 4rem;
+    }
+
+    /* -- PAGE HEADER ----------------------------------------------- */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-title {
+      font-family: var(--font-title);
+      font-size: 2.8rem;
+      letter-spacing: 0.22em;
+      color: var(--white);
+    }
+
+    .title-line {
+      display: block;
+      width: 44px; height: 2.5px;
+      background: var(--teal);
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* -- PASS / FAIL BANNER ----------------------------------------------- */
+    .verdict {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 0.9rem 2rem;
+      border-radius: 8px;
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .verdict-pass {
+      background: rgba(44,185,138,0.14);
+      border: 1px solid rgba(44,185,138,0.40);
+      color: var(--teal);
+    }
+    .verdict-fail {
+      background: rgba(204,51,51,0.14);
+      border: 1px solid rgba(204,51,51,0.40);
+      color: var(--red);
+    }
+    .verdict-icon { font-size: 1.3rem; }
+
+    /* -- SCORE PANEL ----------------------------------------------- */
+    .score-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Score ring (left column) */
+    .score-ring-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.6rem 1rem;
+      gap: 0.4rem;
+    }
+
+    .ring-svg { display: block; }
+
+    .ring-score-text {
+      font-family: var(--font-title);
+      font-size: 2.4rem;
+      letter-spacing: 0.06em;
+      line-height: 1;
+      fill: var(--white);
+    }
+    .ring-max-text { fill: var(--grey); font-family: sans-serif; font-size: 0.85rem; }
+
+    .ring-label {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+
+    /* Breakdown bars (right column) */
+    .breakdown-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1.4rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .breakdown-row { display: flex; flex-direction: column; gap: 0.3rem; }
+
+    .breakdown-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-ui);
+      font-size: 0.80rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+    }
+    .breakdown-label span:last-child { color: var(--white); }
+
+    .bar-track {
+      height: 5px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: var(--teal);
+      width: 0%;
+      transition: width 1s ease 0.4s;
+    }
+    .bar-fill.amber { background: var(--amber); }
+    .bar-fill.red   { background: var(--red); }
+
+    /* -- TIME LEFT CARD ----------------------------------------------- */
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 1rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .info-card-label {
+      font-family: var(--font-ui);
+      font-size: 0.70rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--grey);
+    }
+    .info-card-value {
+      font-family: var(--font-title);
+      font-size: 1.6rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+    }
+
+    /* -- SECTION HEADING ----------------------------------------------- */
+    .section-heading {
+      font-family: var(--font-ui);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--grey);
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* -- RESULT CARDS ----------------------------------------------- */
+    #result-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 2rem;
+    }
+
+    .result-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto auto;
+      gap: 0.25rem 0.8rem;
+      align-items: start;
+    }
+
+    .result-card--best   { border-left: 3px solid var(--teal); }
+    .result-card--good   { border-left: 3px solid var(--amber); }
+    .result-card--wrong  { border-left: 3px solid var(--red); }
+    .result-card--skipped{ border-left: 3px solid #555; }
+
+    .card-pkg-name {
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--white);
+    }
+
+    .outcome-badge {
+      grid-row: 1 / 3;
+      grid-column: 2;
+      align-self: center;
+      font-family: var(--font-ui);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.7rem;
+      border-radius: 4px;
+    }
+    .badge-best    { background: rgba(44,185,138,0.18); color: var(--teal); border: 1px solid rgba(44,185,138,0.35); }
+    .badge-good    { background: rgba(224,144,32,0.18); color: var(--amber); border: 1px solid rgba(224,144,32,0.35); }
+    .badge-wrong   { background: rgba(204,51,51,0.18);  color: var(--red);   border: 1px solid rgba(204,51,51,0.35); }
+    .badge-skipped { background: rgba(150,150,150,0.12); color: #888; border: 1px solid rgba(150,150,150,0.25); }
+
+    .card-meta {
+      font-family: var(--font-body);
+      font-size: 0.73rem;
+      color: #555;
+    }
+
+    .card-technique {
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: var(--grey);
+      margin-top: 0.1rem;
+    }
+    .card-technique strong { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+    .card-feedback {
+      grid-column: 1 / -1;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      color: #666;
+      line-height: 1.5;
+      margin-top: 0.4rem;
+      padding-top: 0.55rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .card-pts {
+      font-family: var(--font-title);
+      font-size: 1.2rem;
+      letter-spacing: 0.06em;
+    }
+    .card-pts.pts-best  { color: var(--teal); }
+    .card-pts.pts-good  { color: var(--amber); }
+    .card-pts.pts-wrong { color: var(--red); }
+    .card-pts.pts-skip  { color: #555; }
+
+    /* -- ACTION BUTTONS ----------------------------------------------- */
+    .action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.8rem;
+    }
+
+    .btn {
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      width: 100%; padding: 0.9rem 1.5rem;
+      border-radius: 6px;
+      font-family: var(--font-ui);
+      font-size: 0.95rem; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: background 0.15s, transform 0.12s;
+    }
+    .btn-primary {
+      background: var(--teal); color: var(--white);
+      box-shadow: 0 0 22px rgba(44,185,138,0.28);
+    }
+    .btn-primary:hover { background: #35D9A0; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: rgba(255,255,255,0.55);
+      border: 1.5px solid rgba(255,255,255,0.18);
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.45); color: var(--white); }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <main class="page" role="main">
+
+    <header class="page-header">
+      <h1 class="page-title">GAME RESULTS</h1>
+      <span class="title-line"></span>
+    </header>
+
+    <!-- Verdict banner -->
+    <div id="pass-fail-banner" class="verdict verdict-pass">
+      <span class="verdict-icon" id="verdict-icon">✓</span>
+      <span id="verdict-text">PASSED - WELL DONE!</span>
+    </div>
+
+    <!-- Score ring + breakdown -->
+    <div class="score-panel">
+
+      <!-- Ring -->
+      <div class="score-ring-card">
+        <svg class="ring-svg" viewBox="0 0 160 160" width="150" height="150">
+          <!-- Background track -->
+          <circle cx="80" cy="80" r="66" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14"/>
+          <!-- Score arc (animates via JS) -->
+          <circle id="ring-arc" cx="80" cy="80" r="66" fill="none"
+                  stroke="#2CB98A" stroke-width="14"
+                  stroke-linecap="round"
+                  stroke-dasharray="414.7" stroke-dashoffset="414.7"
+                  transform="rotate(-90 80 80)"
+                  style="transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1) 0.3s"/>
+          <!-- Score number -->
+          <text id="ring-number" x="80" y="72" text-anchor="middle"
+                fill="white" font-family="'Bebas Neue',sans-serif"
+                font-size="38" letter-spacing="2">0</text>
+          <text x="80" y="96" text-anchor="middle"
+                fill="rgba(255,255,255,0.35)" font-family="Barlow,sans-serif"
+                font-size="13">/ 100</text>
+          <text x="80" y="116" text-anchor="middle"
+                fill="rgba(255,255,255,0.22)" font-family="Barlow,sans-serif"
+                font-size="10" letter-spacing="1">TOTAL</text>
+        </svg>
+        <p class="ring-label">Overall Score</p>
+      </div>
+
+      <!-- Breakdown bars -->
+      <div class="breakdown-card">
+        <div class="breakdown-row">
+          <div class="breakdown-label">
+            <span>Technique</span>
+            <span id="score-technique">- / 50</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" id="bar-technique"></div></div>
+        </div>
+        <div class="breakdown-row">
+          <div class="breakdown-label">
+            <span>Time Bonus</span>
+            <span id="score-time">- / 30</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill amber" id="bar-time"></div></div>
+        </div>
+        <div class="breakdown-row">
+          <div class="breakdown-label">
+            <span>No Injury Bonus</span>
+            <span id="score-injury">- / 20</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" id="bar-injury"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info row -->
+    <div class="info-row">
+      <div class="info-card">
+        <p class="info-card-label">Time Remaining</p>
+        <p class="info-card-value" id="time-remaining-display">-</p>
+      </div>
+      <div class="info-card">
+        <p class="info-card-label">Packages Handled</p>
+        <p class="info-card-value" id="pkgs-handled">- / 5</p>
+      </div>
+    </div>
+
+    <!-- Package results -->
+    <p class="section-heading">Package Breakdown</p>
+    <div id="result-cards"></div>
+
+    <!-- Actions -->
+    <div class="action-row">
+      <a href="index.html" class="btn btn-secondary">← Main Menu</a>
+      <a href="how-to-play.html" id="retry-btn" class="btn btn-primary">Try Again →</a>
+    </div>
+
+  </main>
+
+  <script src="js/session.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/timer.js"></script>
+  <script>
+    // -- Animated counter ----------------------------------------------- //
+    function animateCount(el, target, duration, suffix) {
+      const start = performance.now();
+      const from  = 0;
+      function step(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const v = Math.round(from + (target - from) * t);
+        el.textContent = v + (suffix || '');
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // -- Outcome to points ----------------------------------------------- //
+    function outcomePoints(outcome) {
+      if (outcome === 'best')  return { pts: 10, cls: 'pts-best' };
+      if (outcome === 'good')  return { pts: 5,  cls: 'pts-good' };
+      if (outcome === 'wrong') return { pts: 0,  cls: 'pts-wrong' };
+      return { pts: 0, cls: 'pts-skip' };
+    }
+
+    // -- Outcome badge HTML ----------------------------------------------- //
+    function outcomeBadge(outcome) {
+      const map = {
+        best:    { cls: 'badge-best',    label: 'BEST'    },
+        good:    { cls: 'badge-good',    label: 'GOOD'    },
+        wrong:   { cls: 'badge-wrong',   label: 'WRONG'   },
+        skipped: { cls: 'badge-skipped', label: 'SKIPPED' }
+      };
+      const o = map[outcome] || map.skipped;
+      return `<span class="outcome-badge ${o.cls}">${o.label}</span>`;
+    }
+
+    function techniqueLabel(t) {
+      if (t === 'solo')    return 'Solo Lift';
+      if (t === 'team')    return 'Team Lift';
+      if (t === 'trolley') return 'Use Trolley';
+      return 'Not attempted';
+    }
+
+    // -- Main render ----------------------------------------------- //
+    function renderDebrief() {
+      const session = getSession();
+      if (!session || session.phase !== 'debrief') {
+        window.location.href = 'index.html'; return;
+      }
+
+      const techTotal   = calculateTechniqueTotal();
+      const timeBonus   = calculateTimeBonus();
+      const injBonus    = calculateNoInjuryBonus();
+      const grand       = calculateTotal();
+      const passed      = isPassed();
+
+      // -- Verdict ----------------------------------------------- //
+      const banner  = document.getElementById('pass-fail-banner');
+      const vIcon   = document.getElementById('verdict-icon');
+      const vText   = document.getElementById('verdict-text');
+      if (passed) {
+        banner.className = 'verdict verdict-pass';
+        vIcon.textContent = '✓';
+        vText.textContent = 'PASSED - WELL DONE!';
+      } else {
+        banner.className = 'verdict verdict-fail';
+        vIcon.textContent = '✗';
+        vText.textContent = 'NOT PASSED - Score 60+ to pass';
+      }
+
+      // -- Score ring ----------------------------------------------- //
+      const CIRC = 414.7; // 2π × 66
+      const arc  = document.getElementById('ring-arc');
+      const num  = document.getElementById('ring-number');
+      // Tint ring by result
+      arc.style.stroke = passed ? '#2CB98A' : '#CC3333';
+
+      setTimeout(() => {
+        arc.style.strokeDashoffset = CIRC * (1 - grand / 100);
+      }, 100);
+
+      animateCount(num, grand, 1400);
+
+      // -- Bars -----------------------------------------------
+      setTimeout(() => {
+        document.getElementById('bar-technique').style.width = (techTotal / 50 * 100) + '%';
+        document.getElementById('bar-time').style.width      = (timeBonus / 30 * 100) + '%';
+        document.getElementById('bar-injury').style.width    = (injBonus / 20 * 100)  + '%';
+        // injury bar: green if full, red if zero
+        document.getElementById('bar-injury').className =
+          'bar-fill' + (injBonus === 20 ? '' : injBonus > 0 ? ' amber' : ' red');
+      }, 200);
+
+      // -- Labels -----------------------------------------------
+      setTimeout(() => {
+        animateCount(document.getElementById('score-technique'),
+                     techTotal, 800); // no suffix shown here
+      }, 150);
+      document.getElementById('score-technique').textContent = `${techTotal} / 50`;
+      document.getElementById('score-time').textContent      = `${timeBonus} / 30`;
+      document.getElementById('score-injury').textContent    = `${injBonus} / 20`;
+
+      // -- Info row -----------------------------------------------
+      const tEl = document.getElementById('time-remaining-display');
+      if (tEl) tEl.textContent = formatTime(session.timeRemaining);
+      const pEl = document.getElementById('pkgs-handled');
+      if (pEl) pEl.textContent = `${session.choices.length} / 5`;
+
+      // -- Result cards -----------------------------------------------
+      const container = document.getElementById('result-cards');
+      container.innerHTML = '';
+      session.choices.forEach((c, i) => {
+        const { pts, cls } = outcomePoints(c.outcome);
+        const art = document.createElement('article');
+        art.className = `result-card result-card--${c.outcome}`;
+        art.innerHTML = `
+          <p class="card-pkg-name">${c.packageName}</p>
+          ${outcomeBadge(c.outcome)}
+          <p class="card-meta">${c.positionLabel}</p>
+          <p class="card-pts ${cls}">${pts} pts</p>
+          <p class="card-technique">Technique: <strong>${techniqueLabel(c.techniqueChosen)}</strong></p>
+          <p class="card-feedback">${c.feedbackText}</p>
+        `;
+        container.appendChild(art);
+      });
+    }
+
+    renderDebrief();
+  </script>
+</body>
+</html>

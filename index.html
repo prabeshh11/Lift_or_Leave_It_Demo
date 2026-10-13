@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lift or Leave It</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:     #2CB98A;
+      --teal-dim: rgba(44,185,138,0.18);
+      --black:    #080808;
+      --white:    #FFFFFF;
+      --grey:     rgba(255,255,255,0.55);
+      --font-title: 'Bebas Neue', sans-serif;
+      --font-ui:    'Rajdhani', sans-serif;
+      --font-body:  'Barlow', sans-serif;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--black);
+      overflow: hidden;
+      font-family: var(--font-body);
+      color: var(--white);
+    }
+
+    /* -- BACKGROUND --------------------------------- */
+    .bg {
+      position: fixed; inset: 0;
+      background: url('assets/warehouse-bg.jpg') center center / cover no-repeat;
+    }
+    /* Darkening overlay - matches reference: dark vignette, slightly lit centre */
+    .bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 50% 45%,
+          rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.78) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.65) 100%);
+    }
+
+    /* -- EMBER / SPARK PARTICLES --------------------------------- */
+    #particles {
+      position: fixed; inset: 0;
+      z-index: 5;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .ember {
+      position: absolute;
+      bottom: -12px;
+      border-radius: 50%;
+      opacity: 0;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0)     translateX(0)    scale(1);    opacity: 0;    }
+      8%   { opacity: 1; }
+      50%  { transform: translateY(-45vh) translateX(var(--drift))      scale(0.85);   opacity: 0.85; }
+      85%  { opacity: 0.4; }
+      100% { transform: translateY(-95vh) translateX(calc(var(--drift) * 1.6)) scale(0.3); opacity: 0; }
+    }
+
+    /* -- LAYOUT --------------------------------- */
+    .page {
+      position: relative; z-index: 10;
+      width: 100%; height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+    }
+
+    /* -- TITLE --------------------------------- */
+    .title {
+      font-family: var(--font-title);
+      font-size: clamp(3.5rem, 8vw, 6rem);
+      letter-spacing: 0.18em;
+      line-height: 1;
+      text-align: center;
+      color: var(--white);
+      text-shadow: 0 2px 40px rgba(0,0,0,0.8);
+      margin-bottom: 0.6rem;
+    }
+
+    .subtitle {
+      font-family: var(--font-ui);
+      font-size: clamp(0.7rem, 1.2vw, 0.88rem);
+      letter-spacing: 0.40em;
+      font-weight: 500;
+      text-transform: uppercase;
+      color: var(--grey);
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    /* -- BUTTONS --------------------------------- */
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 340px;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      width: 100%;
+      padding: 1rem 2rem;
+      border-radius: 6px;
+      font-family: var(--font-ui);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: var(--teal);
+      color: var(--white);
+      box-shadow: 0 0 28px rgba(44,185,138,0.35);
+    }
+    .btn-primary:hover {
+      background: #35D9A0;
+      box-shadow: 0 0 40px rgba(44,185,138,0.55);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.30);
+    }
+    .btn-secondary:hover {
+      border-color: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.05);
+      transform: translateY(-1px);
+    }
+
+    .btn-arrow { font-size: 1.1rem; }
+
+    /* -- FOOTER --------------------------------- */
+    .footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 20;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.8rem;
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.35);
+    }
+
+    .footer-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-icon { font-size: 1rem; opacity: 0.6; }
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+
+  <!-- Ember / spark particles -->
+  <div id="particles"></div>
+
+  <div class="page">
+    <h1 class="title">LIFT OR LEAVE IT</h1>
+    <p class="subtitle">Manual Handling Training Simulator</p>
+
+    <div class="btn-group">
+      <a href="how-to-play.html" class="btn btn-primary">
+        START GAME <span class="btn-arrow">→</span>
+      </a>
+      <a href="how-to-play.html" class="btn btn-secondary" id="htp-btn">
+        HOW TO PLAY
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span>© 2026 TEAM BAAP </span>
+    <div class="footer-right">
+      <span class="footer-icon">🏋️</span>
+      <span>Manual Handling Training</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/session.js"></script>
+
+  <!-- Ember particle spawner -->
+  <script>
+    (function spawnEmbers() {
+      var container = document.getElementById('particles');
+      if (!container) return;
+
+      var colors = [
+        'rgba(255,160,20,VAR)',   // amber
+        'rgba(255,100,10,VAR)',   // deep orange
+        'rgba(255,200,50,VAR)',   // golden
+        'rgba(255,240,180,VAR)',  // near-white hot
+        'rgba(220,60,10,VAR)',    // dark fire
+        'rgba(255,130,30,VAR)'    // flame orange
+      ];
+
+      var count = 38;
+      for (var i = 0; i < count; i++) {
+        var el       = document.createElement('span');
+        el.className = 'ember';
+
+        var size      = 2 + Math.random() * 5;          // 2-7 px
+        var left      = 10 + Math.random() * 80;        // 10-90% across
+        var duration  = 5 + Math.random() * 9;          // 5-14 s
+        var delay     = -(Math.random() * 12);           // stagger start (negative = already in progress)
+        var drift     = (Math.random() - 0.5) * 140;    // -70 to +70 px horizontal drift
+        var alpha     = 0.55 + Math.random() * 0.45;    // 0.55-1.0 base opacity
+        var rawColor  = colors[Math.floor(Math.random() * colors.length)];
+        var color     = rawColor.replace('VAR', alpha.toFixed(2));
+
+        el.style.cssText = [
+          'width:'            + size      + 'px',
+          'height:'           + size      + 'px',
+          'left:'             + left      + '%',
+          'background:'       + color,
+          'box-shadow: 0 0 ' + (size * 2.5) + 'px ' + (size * 1.2) + 'px ' + color,
+          '--drift:'          + drift     + 'px',
+          'animation-duration:' + duration  + 's',
+          'animation-delay:'  + delay     + 's'
+        ].join(';');
+
+        container.appendChild(el);
+      }
+    })();
+  </script>
+
+  <script>
+    // Clear any stale session when landing on home screen
+    try { sessionStorage.removeItem('lift_session'); } catch(e) {}
+
+    // START GAME → build session → navigate to 3-D game
+    document.querySelector('.btn-primary').addEventListener('click', function(e) {
+      e.preventDefault();
+      try { initSession(); } catch(err) { console.warn('initSession:', err); }
+      window.location.href = 'game.html';
+    });
+
+    // HOW TO PLAY → info/rules page
+    document.getElementById('htp-btn').addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = 'how-to-play.html';
+    });
+  </script>
+</body>
+</html>

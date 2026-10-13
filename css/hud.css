@@ -1,0 +1,257 @@
+/* In-game HUD overlay elements */
+
+/*  BASE OVERLAY  */
+#hud-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  font-family: var(--font-main, system-ui, sans-serif);
+}
+
+#hud-overlay .interactive { pointer-events: auto; }
+
+/* GLASS PANEL */
+.hud-glass {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+/* TIMER (top-left) */
+#hud-timer {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.55rem 1rem;
+  min-width: 130px;
+}
+
+.hud-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0F9E76;
+  margin-bottom: 0.12rem;
+  display: block;
+}
+
+#timer-display {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+#timer-display.urgent {
+  color: #FF4444;
+  animation: timerPulse 0.7s ease infinite alternate;
+}
+
+@keyframes timerPulse {
+  from { opacity: 1; }
+  to   { opacity: 0.55; }
+}
+
+#pause-indicator {
+  display: none;
+  font-size: 0.68rem;
+  color: #BA7517;
+  font-weight: 700;
+  margin-top: 0.3rem;
+  letter-spacing: 0.05em;
+}
+
+/* PACKAGE COUNTER (top-right) */
+#hud-counter {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.55rem 1rem;
+  text-align: right;
+}
+
+#pkg-counter {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* CROSSHAIR */
+#crosshair {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+#crosshair::before, #crosshair::after {
+  content: '';
+  position: absolute;
+  background: rgba(255,255,255,0.75);
+}
+#crosshair::before {
+  width: 2px; height: 100%;
+  left: 50%; top: 0;
+  transform: translateX(-50%);
+}
+#crosshair::after {
+  height: 2px; width: 100%;
+  top: 50%; left: 0;
+  transform: translateY(-50%);
+}
+
+/* PROXIMITY PROMPT (bottom-centre) */
+#proximity-prompt {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.55rem 1.4rem;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+#proximity-prompt.visible { opacity: 1; }
+
+.prompt-key {
+  display: inline-block;
+  background: rgba(255,255,255,0.22);
+  border-radius: 4px;
+  padding: 0 0.35rem;
+  font-family: monospace;
+  margin-right: 0.3rem;
+  font-weight: 700;
+}
+
+/* JUMP HINT (bottom-right, always visible during play) */
+#jump-hint {
+  position: absolute;
+  bottom: 1.2rem;
+  right: 1rem;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.60);
+  backdrop-filter: blur(4px);
+  color: rgba(255,255,255,0.75);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  pointer-events: none;
+  white-space: nowrap;
+  border: 1px solid rgba(255,255,255,0.14);
+  user-select: none;
+}
+
+/* TOAST */
+#toast-msg {
+  position: absolute;
+  bottom: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(186,117,23,0.92);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#toast-msg.visible { opacity: 1; }
+
+/* MINIMAP (bottom-left) */
+#minimap-container {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  /* Responsive width: 110px on tiny phones → 200px on desktop */
+  width: clamp(110px, 30vw, 200px);
+  background: transparent;
+  border: 2px solid rgba(80, 130, 200, 0.45);
+  border-radius: 10px;
+  overflow: hidden;
+  pointer-events: auto;
+  box-shadow: 0 0 18px rgba(0, 100, 200, 0.25), 0 4px 20px rgba(0,0,0,0.65);
+  user-select: none;
+}
+
+#minimap-toggle-btn {
+  width: 100%;
+  background: rgba(8, 15, 28, 0.88);
+  border: none;
+  border-bottom: 1px solid rgba(80,130,200,0.3);
+  color: #6AAAE0;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.28rem 0;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.15s;
+}
+#minimap-toggle-btn:hover { background: rgba(16, 28, 50, 0.98); }
+
+/* Canvas: rendered at 400×320 internally, displayed responsively */
+#minimap-canvas {
+  display: block;
+  width: 100%;           /* fills container width */
+  height: auto;          /* preserves 5:4 aspect ratio automatically */
+  aspect-ratio: 5 / 4;  /* 200:160 = 5:4 */
+}
+
+#minimap-container.collapsed #minimap-canvas { display: none; }
+#minimap-container.collapsed { border-color: rgba(80,130,200,0.25); }
+
+/* Extra shrink on very small phones */
+@media (max-width: 480px) {
+  #minimap-container {
+    width: clamp(90px, 28vw, 130px);
+    bottom: 0.6rem;
+    left: 0.6rem;
+    border-radius: 7px;
+  }
+  #minimap-toggle-btn {
+    font-size: 0.52rem;
+    padding: 0.22rem 0;
+    letter-spacing: 0.10em;
+  }
+}
+
+/* Landscape phone: keep it even smaller so it doesn't block the view */
+@media (max-height: 480px) and (orientation: landscape) {
+  #minimap-container {
+    width: clamp(80px, 18vw, 120px);
+    bottom: 0.4rem;
+    left: 0.4rem;
+  }
+}
+
+
+/* ARIA LIVE */
+#timer-live {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}

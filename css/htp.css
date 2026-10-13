@@ -1,0 +1,206 @@
+/* How to Play screen */
+
+body.htp-screen {
+  background: #F8F7F3;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/*  HEADER */
+.htp-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #1B2E4B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.9rem 2rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.htp-header-title {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.htp-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 6px;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  text-decoration: none;
+}
+.htp-back-btn:hover { background: rgba(255,255,255,0.2); }
+
+/*  CONTENT  */
+.htp-content {
+  flex: 1;
+  max-width: 780px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 4rem;
+}
+
+.htp-section {
+  margin-bottom: 2.5rem;
+}
+
+.htp-section-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1B2E4B;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid #0F6E56;
+  display: inline-block;
+}
+
+.htp-content p {
+  color: #333;
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+
+/* Controls list */
+.controls-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.control-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.2rem;
+  height: 2.2rem;
+  background: #1B2E4B;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  padding: 0 0.5rem;
+  font-family: var(--font-mono, monospace);
+  box-shadow: 0 2px 0 #0a1825;
+  white-space: nowrap;
+}
+
+.control-desc {
+  display: flex;
+  align-items: center;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+/* Technique cards */
+.technique-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.technique-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1.2rem;
+  border-top: 4px solid #ccc;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.technique-card--solo   { border-top-color: #0F6E56; }
+.technique-card--team   { border-top-color: #3C3489; }
+.technique-card--trolley{ border-top-color: #BA7517; }
+
+.technique-card h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1B2E4B;
+  margin-bottom: 0.5rem;
+}
+
+.technique-card p {
+  font-size: 0.88rem;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Scoring table */
+.scoring-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.92rem;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+.scoring-table th {
+  background: #1B2E4B;
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  text-align: left;
+  font-weight: 600;
+}
+
+.scoring-table td {
+  padding: 0.65rem 1.2rem;
+  border-bottom: 1px solid #eee;
+  color: #333;
+}
+
+.scoring-table tr:last-child td { border-bottom: none; }
+.scoring-table tr.total-row td  { font-weight: 700; color: #1B2E4B; background: #f0f0f0; }
+.scoring-table tr.pass-row td   { font-weight: 700; color: #0F6E56; }
+
+/* Tips */
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 0.5rem;
+}
+
+.tips-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.6rem 0;
+  color: #333;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
+}
+
+.tips-list li::before {
+  content: '💡';
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+/* Footer CTA */
+.htp-footer {
+  background: #1B2E4B;
+  padding: 2rem;
+  text-align: center;
+}
+
+.htp-footer .btn {
+  min-width: 220px;
+  font-size: 1.05rem;
+  padding: 1rem 2.5rem;
+}
